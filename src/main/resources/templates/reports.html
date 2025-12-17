@@ -22,12 +22,12 @@
     <main class="container">
         <h2>Verified Fake News Reports</h2>
         
-        <div th:if="${reports.isEmpty()}" class="no-reports">
+        <div th:if="${approvedReports.isEmpty()}" class="no-reports">
             <p>No verified reports yet.</p>
         </div>
         
-        <div class="reports-list" th:if="${!reports.isEmpty()}">
-            <div class="report-card" th:each="report : ${reports}">
+        <div class="reports-list" th:if="${!approvedReports.isEmpty()}">
+            <div class="report-card" th:each="report : ${approvedReports}">
                 <div class="report-header">
                     <span class="category-badge" th:text="${report.category}"></span>
                     <span class="date" th:text="${#temporals.format(report.approvedAt, 'MMM dd, yyyy')}"></span>
@@ -42,6 +42,29 @@
                     <span class="verified">✓ Verified by Admin</span>
                 </div>
             </div>
+        </div>
+
+        <h2>Rejected Fake News Reports</h2>
+        
+        <div th:if="${rejectedReports.isEmpty()}" class="no-reports">
+            <p>No rejected reports yet.</p>
+        </div>
+        
+        <div class="reports-list" th:if="${!rejectedReports.isEmpty()}">
+            <div class="report-card" th:each="report : ${rejectedReports}">
+                <div class="report-header">
+                    <span class="category-badge" th:text="${report.category}"></span>
+                    <span class="date" th:text="${#temporals.format(report.reportedAt, 'MMM dd, yyyy')}"></span>
+                </div>
+                <h3 th:text="${report.newsSource}"></h3>
+                <p class="url">
+                    <strong>URL:</strong> 
+                    <a th:href="${report.url}" target="_blank" rel="noopener noreferrer" th:text="${report.url}"></a>
+                </p>
+                <p class="description" th:text="${report.description}"></p>
+                                    <div class="report-footer">
+                                        <span class="rejected">✗ Rejected by Admin</span>
+                                    </div>            </div>
         </div>
     </main>
 

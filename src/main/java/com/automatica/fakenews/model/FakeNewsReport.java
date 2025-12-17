@@ -30,8 +30,9 @@ public class FakeNewsReport {
     @Column(nullable = false)
     private LocalDateTime reportedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean approved = false;
+    private Status status;
 
     @Column
     private LocalDateTime approvedAt;
@@ -41,6 +42,7 @@ public class FakeNewsReport {
 
     public FakeNewsReport() {
         this.reportedAt = LocalDateTime.now();
+        this.status = Status.PENDING;
     }
 
     public Long getId() {
@@ -91,12 +93,12 @@ public class FakeNewsReport {
         this.reportedAt = reportedAt;
     }
 
-    public boolean isApproved() {
-        return approved;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setApproved(boolean approved) {
-        this.approved = approved;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public LocalDateTime getApprovedAt() {

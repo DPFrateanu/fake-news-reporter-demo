@@ -9,9 +9,7 @@ import java.util.List;
 @Repository
 public interface FakeNewsReportRepository extends JpaRepository<FakeNewsReport, Long> {
     
-    List<FakeNewsReport> findByApprovedTrueOrderByApprovedAtDesc();
-    
-    List<FakeNewsReport> findByApprovedFalseOrderByReportedAtDesc();
+    List<FakeNewsReport> findByStatusOrderByReportedAtDesc(com.automatica.fakenews.model.Status status);
     
     List<FakeNewsReport> findAllByOrderByReportedAtDesc();
 }

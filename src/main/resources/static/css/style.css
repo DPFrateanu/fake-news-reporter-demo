@@ -135,6 +135,16 @@ main {
     background-color: #c0392b;
 }
 
+.btn-warning {
+    background-color: #f39c12; /* Yellow/Orange */
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+.btn-warning:hover {
+    background-color: #e67e22; /* Darker Yellow/Orange */
+}
+
 .btn-sm {
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
