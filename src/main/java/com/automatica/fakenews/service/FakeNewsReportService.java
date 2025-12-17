@@ -17,11 +17,15 @@ public class FakeNewsReportService {
     private FakeNewsReportRepository reportRepository;
 
     public List<FakeNewsReport> getApprovedReports() {
-        return reportRepository.findByApprovedTrueOrderByApprovedAtDesc();
+        return reportRepository.findByStatusOrderByReportedAtDesc(com.automatica.fakenews.model.Status.APPROVED);
     }
 
     public List<FakeNewsReport> getPendingReports() {
-        return reportRepository.findByApprovedFalseOrderByReportedAtDesc();
+        return reportRepository.findByStatusOrderByReportedAtDesc(com.automatica.fakenews.model.Status.PENDING);
+    }
+
+    public List<FakeNewsReport> getRejectedReports() {
+        return reportRepository.findByStatusOrderByReportedAtDesc(com.automatica.fakenews.model.Status.REJECTED);
     }
 
     public List<FakeNewsReport> getAllReports() {
@@ -42,9 +46,19 @@ public class FakeNewsReportService {
         Optional<FakeNewsReport> reportOpt = reportRepository.findById(id);
         if (reportOpt.isPresent()) {
             FakeNewsReport report = reportOpt.get();
-            report.setApproved(true);
+            report.setStatus(com.automatica.fakenews.model.Status.APPROVED);
             report.setApprovedAt(LocalDateTime.now());
             report.setApprovedBy(approvedBy);
+            reportRepository.save(report);
+        }
+    }
+
+    @Transactional
+    public void rejectReport(Long id) {
+        Optional<FakeNewsReport> reportOpt = reportRepository.findById(id);
+        if (reportOpt.isPresent()) {
+            FakeNewsReport report = reportOpt.get();
+            report.setStatus(com.automatica.fakenews.model.Status.REJECTED);
             reportRepository.save(report);
         }
     }

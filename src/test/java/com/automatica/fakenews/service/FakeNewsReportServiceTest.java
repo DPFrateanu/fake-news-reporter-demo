@@ -1,6 +1,7 @@
 package com.automatica.fakenews.service;
 
 import com.automatica.fakenews.model.FakeNewsReport;
+import com.automatica.fakenews.model.Status;
 import com.automatica.fakenews.repository.FakeNewsReportRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +55,7 @@ class FakeNewsReportServiceTest {
         report.setNewsSource("Fake News Daily");
         report.setUrl("http://fakenews.com");
         report.setCategory("Politics");
-        report.setApproved(false);
+        report.setStatus(com.automatica.fakenews.model.Status.PENDING);
 
         when(reportRepository.findById(1L)).thenReturn(Optional.of(report));
         when(reportRepository.save(any(FakeNewsReport.class))).thenReturn(report);
@@ -67,7 +68,7 @@ class FakeNewsReportServiceTest {
         verify(reportRepository).save(captor.capture());
 
         FakeNewsReport savedReport = captor.getValue();
-        assertTrue(savedReport.isApproved(), "Report should be approved");
+        assertEquals(com.automatica.fakenews.model.Status.APPROVED, savedReport.getStatus(), "Report should be approved");
         assertEquals("admin", savedReport.getApprovedBy(), "Approved by should be set to 'admin'");
         assertNotNull(savedReport.getApprovedAt(), "Approved at timestamp should be set");
     }
@@ -90,15 +91,15 @@ class FakeNewsReportServiceTest {
         FakeNewsReport report1 = new FakeNewsReport();
         report1.setId(1L);
         report1.setNewsSource("Source 1");
-        report1.setApproved(true);
+        report1.setStatus(Status.APPROVED);
 
         FakeNewsReport report2 = new FakeNewsReport();
         report2.setId(2L);
         report2.setNewsSource("Source 2");
-        report2.setApproved(true);
+        report2.setStatus(Status.APPROVED);
 
         List<FakeNewsReport> approvedReports = Arrays.asList(report1, report2);
-        when(reportRepository.findByApprovedTrueOrderByApprovedAtDesc()).thenReturn(approvedReports);
+        when(reportRepository.findByStatusOrderByReportedAtDesc(Status.APPROVED)).thenReturn(approvedReports);
 
         // When
         List<FakeNewsReport> result = reportService.getApprovedReports();
@@ -106,9 +107,9 @@ class FakeNewsReportServiceTest {
         // Then
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(result.get(0).isApproved());
-        assertTrue(result.get(1).isApproved());
-        verify(reportRepository, times(1)).findByApprovedTrueOrderByApprovedAtDesc();
+        assertEquals(Status.APPROVED, result.get(0).getStatus());
+        assertEquals(Status.APPROVED, result.get(1).getStatus());
+        verify(reportRepository, times(1)).findByStatusOrderByReportedAtDesc(Status.APPROVED);
     }
 
     @Test
@@ -117,15 +118,15 @@ class FakeNewsReportServiceTest {
         FakeNewsReport report1 = new FakeNewsReport();
         report1.setId(1L);
         report1.setNewsSource("Pending Source 1");
-        report1.setApproved(false);
+        report1.setStatus(Status.PENDING);
 
         FakeNewsReport report2 = new FakeNewsReport();
         report2.setId(2L);
         report2.setNewsSource("Pending Source 2");
-        report2.setApproved(false);
+        report2.setStatus(Status.PENDING);
 
         List<FakeNewsReport> pendingReports = Arrays.asList(report1, report2);
-        when(reportRepository.findByApprovedFalseOrderByReportedAtDesc()).thenReturn(pendingReports);
+        when(reportRepository.findByStatusOrderByReportedAtDesc(Status.PENDING)).thenReturn(pendingReports);
 
         // When
         List<FakeNewsReport> result = reportService.getPendingReports();
@@ -133,8 +134,29 @@ class FakeNewsReportServiceTest {
         // Then
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertFalse(result.get(0).isApproved());
-        assertFalse(result.get(1).isApproved());
-        verify(reportRepository, times(1)).findByApprovedFalseOrderByReportedAtDesc();
+        assertEquals(Status.PENDING, result.get(0).getStatus());
+        assertEquals(Status.PENDING, result.get(1).getStatus());
+        verify(reportRepository, times(1)).findByStatusOrderByReportedAtDesc(Status.PENDING);
+    }
+
+    @Test
+    void testRejectReport_SetsStatusToRejected() {
+        // Given
+        FakeNewsReport report = new FakeNewsReport();
+        report.setId(1L);
+        report.setStatus(Status.PENDING);
+
+        when(reportRepository.findById(1L)).thenReturn(Optional.of(report));
+        when(reportRepository.save(any(FakeNewsReport.class))).thenReturn(report);
+
+        // When
+        reportService.rejectReport(1L);
+
+        // Then
+        ArgumentCaptor<FakeNewsReport> captor = ArgumentCaptor.forClass(FakeNewsReport.class);
+        verify(reportRepository).save(captor.capture());
+
+        FakeNewsReport savedReport = captor.getValue();
+        assertEquals(Status.REJECTED, savedReport.getStatus(), "Report should be rejected");
     }
 }
