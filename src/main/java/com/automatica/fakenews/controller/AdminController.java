@@ -42,9 +42,11 @@ public class AdminController {
     }
 
     @PostMapping("/reject/{id}")
-    public String rejectReport(@PathVariable Long id, 
+    public String rejectReport(@PathVariable Long id,
+                               Authentication authentication,
                                RedirectAttributes redirectAttributes) {
-        reportService.rejectReport(id);
+        String username = authentication.getName();
+        reportService.rejectReport(id, username);
         redirectAttributes.addFlashAttribute("successMessage", "Report rejected successfully!");
         return "redirect:/admin/dashboard";
     }

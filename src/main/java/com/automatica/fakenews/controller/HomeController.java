@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +29,13 @@ public class HomeController {
         model.addAttribute("approvedReports", approvedReports);
         model.addAttribute("rejectedReports", rejectedReports);
         return "index";
+    }
+
+    @GetMapping("/reports/{id}")
+    public String viewReport(@PathVariable("id") Long id, Model model) {
+        FakeNewsReport report = reportService.getReportById(id);
+        model.addAttribute("report", report);
+        return "report-details";
     }
 
     @GetMapping("/reports")
