@@ -3,6 +3,8 @@ package com.automatica.fakenews.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "fake_news_reports")
@@ -11,6 +13,8 @@ public class FakeNewsReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Comment> comments = new ArrayList<>();
 
     @NotBlank(message = "News source is required")
     @Column(nullable = false)
@@ -115,5 +119,13 @@ public class FakeNewsReport {
 
     public void setApprovedBy(String approvedBy) {
         this.approvedBy = approvedBy;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

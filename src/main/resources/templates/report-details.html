@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fake News Reporter</h1>
+            <nav>
+                <a th:href="@{/}">Home</a>
+                <a th:href="@{/reports}">View Reports</a>
+                <a th:href="@{/report}">Report Fake News</a>
+                <a th:href="@{/login}">Admin Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div th:if="${report != null}">
+            <div class="report-card" style="margin-bottom: 2rem;">
+                <div class="report-header">
+                    <span class="category-badge" th:text="${report.category}"></span>
+                    <span class="date" th:text="${#temporals.format(report.reportedAt, 'MMM dd, yyyy')}"></span>
+                </div>
+                <h3 th:text="${report.newsSource}"></h3>
+                <p class="url"><a th:href="${report.url}" th:text="${report.url}" target="_blank"></a></p>
+                <p class="description" th:text="${report.description}"></p>
+                <div class="report-footer">
+                    <span th:if="${report.status.name() == 'APPROVED'}" class="verified">✓ Verified</span>
+                    <span th:if="${report.status.name() == 'REJECTED'}" class="rejected">✗ Rejected</span>
+                    <span th:if="${report.status.name() == 'PENDING'}" class="pending">? Pending</span>
+                </div>
+                <div class="admin-info" th:if="${report.status.name() == 'APPROVED' || report.status.name() == 'REJECTED'}">
+                    <p>
+                        <span th:if="${report.status.name() == 'APPROVED'}">accepted</span>
+                        <span th:if="${report.status.name() == 'REJECTED'}">rejected</span>
+                        by <span th:text="${report.approvedBy}"></span>
+                    </p>
+                </div>
+            </div>
+
+            <section class="comments-section">
+                <h3>Comments</h3>
+                <div th:if="${report.comments.isEmpty()}" class="no-reports">
+                    <p>No comments yet. Be the first to add one!</p>
+                </div>
+                <div class="reports-grid" th:if="${!report.comments.isEmpty()}">
+                    <div class="report-card" th:each="comment : ${report.comments}">
+                        <div class="report-header">
+                            <strong th:text="${comment.user != null ? comment.user.username : 'Anonymous'}"></strong>
+                            <span class="date" th:text="${#temporals.format(comment.createdAt, 'MMM dd, yyyy HH:mm')}"></span>
+                        </div>
+                        <p th:text="${comment.content}"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-container">
+                <h2>Add a Comment</h2>
+                <form th:action="@{/reports/add-comment}" method="post">
+                    <input type="hidden" name="reportId" th:value="${report.id}" />
+                    <div class="form-group">
+                        <label for="comment">Your Comment</label>
+                        <textarea id="comment" name="comment" rows="4" required class="form-control"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </form>
+            </section>
+        </div>
+
+        <div th:if="${report == null}" class="no-reports">
+            <p>Report not found.</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Fake News Reporter. Help fight misinformation.</p>
+        </div>
+    </footer>
+</body>
+</html>

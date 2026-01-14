@@ -32,8 +32,8 @@ public class FakeNewsReportService {
         return reportRepository.findAllByOrderByReportedAtDesc();
     }
 
-    public Optional<FakeNewsReport> getReportById(Long id) {
-        return reportRepository.findById(id);
+    public FakeNewsReport getReportById(Long id) {
+        return reportRepository.findById(id).orElse(null);
     }
 
     @Transactional
@@ -54,11 +54,13 @@ public class FakeNewsReportService {
     }
 
     @Transactional
-    public void rejectReport(Long id) {
+    public void rejectReport(Long id, String rejectedBy) {
         Optional<FakeNewsReport> reportOpt = reportRepository.findById(id);
         if (reportOpt.isPresent()) {
             FakeNewsReport report = reportOpt.get();
             report.setStatus(com.automatica.fakenews.model.Status.REJECTED);
+            report.setApprovedAt(LocalDateTime.now());
+            report.setApprovedBy(rejectedBy);
             reportRepository.save(report);
         }
     }

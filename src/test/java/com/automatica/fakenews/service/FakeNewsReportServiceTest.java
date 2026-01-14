@@ -150,7 +150,7 @@ class FakeNewsReportServiceTest {
         when(reportRepository.save(any(FakeNewsReport.class))).thenReturn(report);
 
         // When
-        reportService.rejectReport(1L);
+        reportService.rejectReport(1L, "admin");
 
         // Then
         ArgumentCaptor<FakeNewsReport> captor = ArgumentCaptor.forClass(FakeNewsReport.class);
@@ -158,5 +158,7 @@ class FakeNewsReportServiceTest {
 
         FakeNewsReport savedReport = captor.getValue();
         assertEquals(Status.REJECTED, savedReport.getStatus(), "Report should be rejected");
+        assertEquals("admin", savedReport.getApprovedBy(), "Rejected by should be set to 'admin'");
+        assertNotNull(savedReport.getApprovedAt(), "Rejected at timestamp should be set");
     }
 }

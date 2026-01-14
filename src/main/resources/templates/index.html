@@ -35,18 +35,20 @@
             </div>
             
             <div class="reports-grid" th:if="${!approvedReports.isEmpty()}">
-                <div class="report-card" th:each="report : ${approvedReports}">
-                    <div class="report-header">
-                        <span class="category-badge" th:text="${report.category}"></span>
-                        <span class="date" th:text="${#temporals.format(report.approvedAt, 'MMM dd, yyyy')}"></span>
+                <a th:href="@{'/reports/' + ${report.id}}" class="report-card-link" th:each="report : ${approvedReports}">
+                    <div class="report-card">
+                        <div class="report-header">
+                            <span class="category-badge" th:text="${report.category}"></span>
+                            <span class="date" th:text="${#temporals.format(report.approvedAt, 'MMM dd, yyyy')}"></span>
+                        </div>
+                        <h4 th:text="${report.newsSource}"></h4>
+                        <p class="url" th:text="${report.url}"></p>
+                        <p class="description" th:text="${report.description}"></p>
+                        <div class="report-footer">
+                            <span class="verified">✓ Verified</span>
+                        </div>
                     </div>
-                    <h4 th:text="${report.newsSource}"></h4>
-                    <p class="url" th:text="${report.url}"></p>
-                    <p class="description" th:text="${report.description}"></p>
-                    <div class="report-footer">
-                        <span class="verified">✓ Verified</span>
-                    </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -57,18 +59,20 @@
             </div>
             
             <div class="reports-grid" th:if="${!rejectedReports.isEmpty()}">
-                <div class="report-card" th:each="report : ${rejectedReports}">
-                    <div class="report-header">
-                        <span class="category-badge" th:text="${report.category}"></span>
-                        <span class="date" th:text="${#temporals.format(report.reportedAt, 'MMM dd, yyyy')}"></span>
+                <a th:href="@{'/reports/' + ${report.id}}" class="report-card-link" th:each="report : ${rejectedReports}">
+                    <div class="report-card">
+                        <div class="report-header">
+                            <span class="category-badge" th:text="${report.category}"></span>
+                            <span class="date" th:text="${#temporals.format(report.reportedAt, 'MMM dd, yyyy')}"></span>
+                        </div>
+                        <h4 th:text="${report.newsSource}"></h4>
+                        <p class="url" th:text="${report.url}"></p>
+                        <p class="description" th:text="${report.description}"></p>
+                        <div class="report-footer">
+                            <span class="rejected">✗ Rejected by Admin</span>
+                        </div>
                     </div>
-                    <h4 th:text="${report.newsSource}"></h4>
-                    <p class="url" th:text="${report.url}"></p>
-                    <p class="description" th:text="${report.description}"></p>
-                    <div class="report-footer">
-                        <span class="rejected">✗ Rejected by Admin</span>
-                    </div>
-                </div>
+                </a>
             </div>
         </section>
     </main>
