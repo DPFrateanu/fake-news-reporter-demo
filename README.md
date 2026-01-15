@@ -25,6 +25,12 @@ A Spring Boot application for reporting and managing fake news sources. Users ca
   - Approve or reject reports
   - Delete inappropriate submissions
 
+- **Commenting Feature:**
+  - Authenticated users can engage in discussions by adding comments to fake news reports.
+  - Comments are displayed publicly on the report details page, fostering community interaction.
+  - Each comment is associated with the user who posted it, showing their username.
+  - The feature is designed to be simple and intuitive, with a comment form available on each report's page for logged-in users.
+
 ## Technology Stack
 
 - **Backend:** Spring Boot 3.2.0
@@ -122,6 +128,9 @@ src/main/resources/
 - `POST /admin/approve/{id}` - Approve a report
 - `POST /admin/delete/{id}` - Delete a report
 
+### Comment Endpoints
+- `POST /reports/add-comment` - Submits a new comment for a specific report. This endpoint requires the user to be authenticated. It takes the report ID and the comment content as parameters. After submission, it redirects the user back to the report details page.
+
 ## Database Schema
 
 ### users
@@ -141,6 +150,13 @@ src/main/resources/
 - `approved` (BOOLEAN)
 - `approved_at` (TIMESTAMP)
 - `approved_by` (VARCHAR)
+
+### comments
+- `id` (BIGINT, Primary Key)
+- `content` (TEXT)
+- `report_id` (BIGINT, Foreign Key to `fake_news_reports`)
+- `user_id` (BIGINT, Foreign Key to `users`)
+- `created_at` (TIMESTAMP)
 
 ## Configuration Profiles
 
