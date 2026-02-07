@@ -23,3 +23,11 @@ logging:
   level:
     com.automatica: INFO
     org.springframework.security: INFO
+
+tools:
+  detector:
+    path: tools/fake-detector-1.0-SNAPSHOT.jar
+
+google:
+  gemini:
+    key: ${GEMINI_API_KEY}

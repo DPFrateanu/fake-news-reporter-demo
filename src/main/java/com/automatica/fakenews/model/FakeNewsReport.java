@@ -44,6 +44,21 @@ public class FakeNewsReport {
     @Column
     private String approvedBy;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean aiAnalyzed = false;
+
+    @Column
+    private boolean isFake;
+
+    @Column
+    private int aiConfidence;
+
+    @Column(length = 2000)
+    private String aiReason;
+
+    @Column(columnDefinition = "TEXT")
+    private String source;
+
     public FakeNewsReport() {
         this.reportedAt = LocalDateTime.now();
         this.status = Status.PENDING;
@@ -127,5 +142,45 @@ public class FakeNewsReport {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public boolean isAiAnalyzed() {
+        return aiAnalyzed;
+    }
+
+    public void setAiAnalyzed(boolean aiAnalyzed) {
+        this.aiAnalyzed = aiAnalyzed;
+    }
+
+    public boolean isAiFake() {
+        return isFake;
+    }
+
+    public void setAiFake(boolean aiFake) {
+        this.isFake = aiFake;
+    }
+
+    public int getAiConfidence() {
+        return aiConfidence;
+    }
+
+    public void setAiConfidence(int aiConfidence) {
+        this.aiConfidence = aiConfidence;
+    }
+
+    public String getAiReason() {
+        return aiReason;
+    }
+
+    public void setAiReason(String aiReason) {
+        this.aiReason = aiReason;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }
