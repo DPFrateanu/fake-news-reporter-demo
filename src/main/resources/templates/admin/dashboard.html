@@ -43,6 +43,27 @@
                         <a th:href="${report.url}" target="_blank" rel="noopener noreferrer" th:text="${report.url}"></a>
                     </p>
                     <p class="description" th:text="${report.description}"></p>
+                    
+                    <!-- AI Analysis Results -->
+                    <div th:if="${report.aiAnalyzed}" class="ai-analysis">
+                        <h4>🤖 AI Analysis</h4>
+                        <div class="ai-result">
+                            <p><strong>Is Fake:</strong> 
+                                <span th:class="${report.aiFake ? 'text-danger' : 'text-success'}" 
+                                      th:text="${report.aiFake ? 'Yes' : 'No'}"></span>
+                            </p>
+                            <p><strong>Confidence:</strong> 
+                                <span th:text="${report.aiConfidence + '%'}"></span>
+                            </p>
+                            <p><strong>Reason:</strong> 
+                                <span th:text="${report.aiReason}"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div th:unless="${report.aiAnalyzed}" class="ai-analysis">
+                        <p class="text-muted"><em>AI analysis not yet available</em></p>
+                    </div>
+                    
                     <div class="admin-actions">
                         <form th:action="@{/admin/approve/{id}(id=${report.id})}" method="post" style="display: inline;">
                             <button type="submit" class="btn btn-success">Approve</button>
@@ -77,6 +98,24 @@
                         <a th:href="${report.url}" target="_blank" rel="noopener noreferrer" th:text="${report.url}"></a>
                     </p>
                     <p class="description" th:text="${report.description}"></p>
+                    
+                    <!-- AI Analysis Results -->
+                    <div th:if="${report.aiAnalyzed}" class="ai-analysis">
+                        <h4>🤖 AI Analysis</h4>
+                        <div class="ai-result">
+                            <p><strong>Is Fake:</strong> 
+                                <span th:class="${report.aiFake ? 'text-danger' : 'text-success'}" 
+                                      th:text="${report.aiFake ? 'Yes' : 'No'}"></span>
+                            </p>
+                            <p><strong>Confidence:</strong> 
+                                <span th:text="${report.aiConfidence + '%'}"></span>
+                            </p>
+                            <p><strong>Reason:</strong> 
+                                <span th:text="${report.aiReason}"></span>
+                            </p>
+                        </div>
+                    </div>
+                    
                     <div class="report-footer">
                         <span class="verified">✓ Verified by: <span th:text="${report.approvedBy}"></span></span>
                     </div>
@@ -108,6 +147,23 @@
                         <a th:href="${report.url}" target="_blank" rel="noopener noreferrer" th:text="${report.url}"></a>
                     </p>
                     <p class="description" th:text="${report.description}"></p>
+                    
+                    <!-- AI Analysis Results -->
+                    <div th:if="${report.aiAnalyzed}" class="ai-analysis">
+                        <h4>🤖 AI Analysis</h4>
+                        <div class="ai-result">
+                            <p><strong>Is Fake:</strong> 
+                                <span th:class="${report.aiFake ? 'text-danger' : 'text-success'}" 
+                                      th:text="${report.aiFake ? 'Yes' : 'No'}"></span>
+                            </p>
+                            <p><strong>Confidence:</strong> 
+                                <span th:text="${report.aiConfidence + '%'}"></span>
+                            </p>
+                            <p><strong>Reason:</strong> 
+                                <span th:text="${report.aiReason}"></span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
