@@ -1,5 +1,6 @@
 package com.automatica.fakenews.service;
 
+import com.automatica.fakenews.kafka.AiKafkaProducer;
 import com.automatica.fakenews.model.FakeNewsReport;
 import com.automatica.fakenews.model.Status;
 import com.automatica.fakenews.repository.FakeNewsReportRepository;
@@ -23,6 +24,7 @@ class FakeNewsReportServiceTest {
 
     @Mock
     private FakeNewsReportRepository reportRepository;
+    private AiKafkaProducer kafkaProducer;
 
     @InjectMocks
     private FakeNewsReportService reportService;
@@ -36,6 +38,7 @@ class FakeNewsReportServiceTest {
         report.setCategory("Politics");
         report.setDescription("This is a fake news source");
 
+        doNothing().when(kafkaProducer).sendReportForAnalysis(any(Long.class));
         when(reportRepository.save(any(FakeNewsReport.class))).thenReturn(report);
 
         // When
