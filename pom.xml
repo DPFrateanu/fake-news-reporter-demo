@@ -93,6 +93,12 @@
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

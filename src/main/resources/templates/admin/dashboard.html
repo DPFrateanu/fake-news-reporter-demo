@@ -58,6 +58,9 @@
                             <p><strong>Reason:</strong> 
                                 <span th:text="${report.aiReason}"></span>
                             </p>
+                            <p th:if="${report.source}"><strong>Source:</strong> 
+                                <span th:text="${report.source}"></span>
+                            </p>
                         </div>
                     </div>
                     <div th:unless="${report.aiAnalyzed}" class="ai-analysis">
@@ -113,6 +116,9 @@
                             <p><strong>Reason:</strong> 
                                 <span th:text="${report.aiReason}"></span>
                             </p>
+                            <p th:if="${report.source}"><strong>Source:</strong> 
+                                <span th:text="${report.source}"></span>
+                            </p>
                         </div>
                     </div>
                     
@@ -161,6 +167,9 @@
                             </p>
                             <p><strong>Reason:</strong> 
                                 <span th:text="${report.aiReason}"></span>
+                            </p>
+                            <p th:if="${report.source}"><strong>Source:</strong> 
+                                <span th:text="${report.source}"></span>
                             </p>
                         </div>
                     </div>
