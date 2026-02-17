@@ -24,6 +24,8 @@ class FakeNewsReportServiceTest {
 
     @Mock
     private FakeNewsReportRepository reportRepository;
+
+    @Mock
     private AiKafkaProducer kafkaProducer;
 
     @InjectMocks
@@ -33,12 +35,13 @@ class FakeNewsReportServiceTest {
     void testSaveReport_Success() {
         // Given
         FakeNewsReport report = new FakeNewsReport();
+        report.setId(100L);
         report.setNewsSource("Fake News Daily");
         report.setUrl("http://fakenews.com");
         report.setCategory("Politics");
         report.setDescription("This is a fake news source");
 
-        doNothing().when(kafkaProducer).sendReportForAnalysis(any(Long.class));
+        doNothing().when(kafkaProducer).sendReportForAnalysis(100L);
         when(reportRepository.save(any(FakeNewsReport.class))).thenReturn(report);
 
         // When
@@ -47,6 +50,7 @@ class FakeNewsReportServiceTest {
         // Then
         assertNotNull(savedReport);
         verify(reportRepository, times(1)).save(report);
+        verify(kafkaProducer, times(1)).sendReportForAnalysis(100L);
         assertEquals("Fake News Daily", savedReport.getNewsSource());
     }
 
