@@ -1,6 +1,7 @@
 package com.automatica.fakenews.service;
 
 import com.automatica.fakenews.FakeNewsReporterApplication;
+import com.automatica.fakenews.kafka.AiKafkaProducer;
 import com.automatica.fakenews.model.FakeNewsReport;
 import com.automatica.fakenews.model.Status;
 import com.automatica.fakenews.repository.FakeNewsReportRepository;
@@ -16,13 +17,12 @@ import java.util.Optional;
 @Service
 public class FakeNewsReportService {
 
-    @Autowired
-    private FakeNewsReportRepository reportRepository;
-    private AiIntegrationService aiIntegrationService;
+    private final FakeNewsReportRepository reportRepository;
+    private final AiKafkaProducer aiKafkaProducer;
 
-    public FakeNewsReportService(FakeNewsReportRepository reportRepository,AiIntegrationService aiIntegrationService) {
+    public FakeNewsReportService(FakeNewsReportRepository reportRepository, AiKafkaProducer aiKafkaProducer) {
         this.reportRepository = reportRepository;
-        this.aiIntegrationService = aiIntegrationService;
+        this.aiKafkaProducer = aiKafkaProducer;
 
     }
 
@@ -51,39 +51,13 @@ public class FakeNewsReportService {
         if(report.getId()==null){
             report.setReportedAt(LocalDateTime.now());
             report.setStatus(Status.PENDING);
+            report.setAiAnalyzed(false);
         }
         FakeNewsReport savedReport = reportRepository.save(report);
-        System.out.println("Raport salvat! Începem analiza AI...");
+        //trimite spre kafka cererea
+        aiKafkaProducer.sendReportForAnalysis(savedReport.getId());
 
-        String textToAnalyze=savedReport.getUrl();
-        if(textToAnalyze==null||textToAnalyze.isEmpty()){
-            textToAnalyze=savedReport.getDescription();
-
-        }
-        try {
-            JSONObject aiResult=aiIntegrationService.analyzeText(textToAnalyze);
-            if(aiResult==null){
-                System.out.println("AI-ul nu a putut analiza textul sau a returnat NULL.");
-            }
-            else {
-                System.out.println(String.format(
-                                "E Fake?: %s\n" +
-                                "Încredere: %d%%\n" +
-                                "Motiv: %s",
-                        aiResult.optBoolean("is_fake"),
-                        aiResult.optInt("confidence"),
-                        aiResult.optString("reason")
-                ));
-                savedReport.setAiAnalyzed(true);
-                savedReport.setAiFake(aiResult.optBoolean("is_fake",false));
-                savedReport.setAiReason(aiResult.optString("reason","nici un motiv"));
-                savedReport.setAiConfidence(aiResult.optInt("confidence",0));
-                return reportRepository.save(savedReport);
-            }
-        }catch (Exception e){
-            System.err.println("Eroare la apelarea AI: " + e.getMessage());
-            e.printStackTrace();
-        }
+        //returnez instant raportul fara loading screen
         return savedReport;
     }
 

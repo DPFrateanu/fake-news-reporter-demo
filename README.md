@@ -18,6 +18,7 @@ A Spring Boot application for reporting and managing fake news sources. Users ca
   - View verified fake news reports
   - Report new fake news sources
   - Browse reports by category (Politics, Health, Science, Technology, Entertainment, Finance)
+  - Make decisions on the report with the help of AI external service
 
 - **Admin Features:**
   - Secure login system
