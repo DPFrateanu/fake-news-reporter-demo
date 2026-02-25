@@ -10,11 +10,15 @@
 <body>
     <header>
         <div class="container">
-            <h1>Fake News Reporter - Admin</h1>
+            <div class="header-content">
+                <h1>Fake News Reporter - Admin</h1>
+                <div class="user-info">
+                    <span class="user-email" sec:authentication="principal.username">admin@fakenews.com</span>
+                </div>
+            </div>
             <nav>
                 <a th:href="@{/admin/dashboard}">Dashboard</a>
                 <a th:href="@{/}">Public View</a>
-                <span sec:authentication="name">User</span>
                 <form th:action="@{/logout}" method="post" style="display: inline;">
                     <button type="submit" class="btn-link">Logout</button>
                 </form>

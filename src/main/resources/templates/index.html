@@ -16,6 +16,11 @@
                 <a th:href="@{/report}">Report Fake News</a>
                 <a th:href="@{/login}">Admin Login</a>
             </nav>
+
+            <div style="position: absolute; top: 30px; right: 20px; font-family: Arial, sans-serif; font-size: 14px;
+            background-color: #f8f9fa; padding: 6px 15px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: #333; border: 1px solid #ddd;">
+                👤 <span th:text="${userEmail}">user@gmail.com</span>
+            </div>
         </div>
     </header>
 

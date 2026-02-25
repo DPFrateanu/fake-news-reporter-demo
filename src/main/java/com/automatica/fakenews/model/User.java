@@ -13,6 +13,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private String password;
 
@@ -27,6 +30,13 @@ public class User {
 
     public User(String username, String password, String role) {
         this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(String username, String email, String password, String role) {
+        this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -69,5 +79,13 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
