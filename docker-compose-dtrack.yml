@@ -1,0 +1,29 @@
+version: '3.7'
+
+volumes:
+  dependency-track:
+
+services:
+  dtrack-apiserver:
+    image: dependencytrack/apiserver:latest
+    environment:
+      # Folosim baza de date integrată pentru simplitate
+      - ALPINE_DATABASE_MODE=embedded
+      - SYSTEM_REQUIREMENT_CHECK_ENABLED=false
+      - EXTRA_JAVA_OPTS=-Xmx2G
+    ports:
+      - '9091:8080' # Backend-ul va fi pe 9091
+    volumes:
+      - 'dependency-track:/data'
+    restart: unless-stopped
+
+  dtrack-frontend:
+    image: dependencytrack/frontend:latest
+    depends_on:
+      - dtrack-apiserver
+    environment:
+      # spune frontend-ului unde găsește backend-ul
+      - API_BASE_URL=http://localhost:9091
+    ports:
+      - '9090:8080' # Interfața web va fi pe 9090
+    restart: unless-stopped
